@@ -60,7 +60,6 @@ END {
       n = substr(ss, RSTART, RLENGTH)
       if (n == "*") {
         gears += g(i, j)
-        if (g(i,j)) printf("%d,%d %d\n", i, j, g(i, j))
       } else {
         if (f(i, j, n))
           sum += n
