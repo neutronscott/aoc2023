@@ -1,18 +1,14 @@
 #!/usr/bin/mawk -f
 
-function scorecard(card, win,    w, i, n, matches) {
-  w = 1
-  n = split(card, arr)
-  for (i = 3; i <= n; i++) {
-    if ($i == "|") {
-      w = 0
-    } else if (w) {
-      win[arr[i]]++
-    } else {
-      if (arr[i] in win) {
-        matches++
-      }
-    }
+function scorecard(card,    a, b, win, i, matches) {
+  split(card, a, /[|]/)
+  split(a[1], b)
+  for (i in b) #hash vals for easy check
+    win[b[i]]++
+  split(a[2], b)
+  for (i in b) {
+    if (b[i] in win)
+      matches++
   }
   return matches
 }
