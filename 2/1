@@ -1,0 +1,25 @@
+#!/usr/bin/awk -f
+
+function p(colors) {
+  if (colors["red"]   > 12 ||
+      colors["green"] > 13 ||
+      colors["blue"]  > 14) return 0
+  return 1
+}
+
+{
+  id = 0 + $2
+  split("", colors)
+  for (i = 3; i <= NF; i += 2) {
+    n = $i
+    c = $(i + 1)
+    sub(/[,;]$/, "", c)
+
+    if (n > colors[c])
+      colors[c] = n
+  }
+  if (p(colors))
+    sum += id
+  pow += colors["red"] * colors["green"] * colors["blue"]
+}
+END { print sum, pow }

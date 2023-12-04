@@ -1,0 +1,40 @@
+#!/usr/bin/awk -f
+{ L[NR] = $0; Llen = NR }
+
+function append(arr, key, val) { arr[key] = ((key in arr) ? (arr[key] SUBSEP) : "") val }
+
+function find_adj_symbols(Y, X, n, syms, nums,     y, x, len, rlen, ss) {
+  len = length(n) + 1
+  for (y = (Y > 1) ? (Y - 1) : Y; y <= Y + 1; y++) {
+    for (x = (X > 1) ? (X - 1) : X; x < X+len; x++) {
+      ss = substr(L[y], x, 1)
+      if (ss ~ /[^0-9.]/) {
+        syms[y,x] = ss
+        append(nums, (y SUBSEP x), n)
+        rlen++
+      }
+    }
+  }
+  return rlen
+}
+
+END {
+  split("", res)
+  for (y = 1; y <= Llen; y++) {
+    line = L[y]
+    xlen = length(line)
+    for (x = 1; x < xlen && match(ss=substr(line, x), /[0-9]+/); x += xi + RLENGTH) {
+      n = substr(ss, RSTART, RLENGTH)
+      xi = RSTART - 1
+      if (find_adj_symbols(y, x + xi, n, syms, nums))
+        sum += n
+    }
+  }
+  for (i in nums) {
+    n = split(nums[i], arr, SUBSEP)
+    if (syms[i] == "*" && n == 2) {
+      gears += arr[1] * arr[2]
+    }
+  }
+  print sum, gears
+}
