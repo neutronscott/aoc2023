@@ -1,0 +1,40 @@
+#!/usr/bin/mawk -f
+
+function scorecard(card, win,    w, i, n, matches) {
+  w = 1
+  n = split(card, arr)
+  for (i = 3; i <= n; i++) {
+    if ($i == "|") {
+      w = 0
+    } else if (w) {
+      win[arr[i]]++
+    } else {
+      if (arr[i] in win) {
+        matches++
+      }
+    }
+  }
+  return matches
+}
+
+function f(cardno, depth,    i, r) {
+  r = 1
+  for (i = 1; i <= M[cardno]; i++)
+    r += f(cardno + i, depth + 1)
+  return r
+}
+
+{
+  cardno = 0+$2
+  cards[cardno] = $0
+  if (m = scorecard($0))
+    sum += 2^(m-1)
+  M[cardno] = m
+  cardmax = cardno
+}
+
+END {
+  for (i = 1; i <= cardmax; i++)
+    p2 += f(i)
+  print sum, p2
+}
